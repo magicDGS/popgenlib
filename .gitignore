@@ -1,0 +1,32 @@
+# Java Files
+*.class
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+# Git
+*~
+
+# InteliJ
+*.iml
+.idea*
+
+# Eclipse
+.settings
+.project
+.classpath
+
+## Build paths
+build/
+/.gradle/
+
+# OSX
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows shortcuts
+*.lnk
+
+# Temp files should be stored in tmp folder
+tmp/
