@@ -31,4 +31,9 @@ package org.magicdgs.popgenlib;
  */
 public class PopGenLibTest {
 
+    /**
+     * For every statistical/mathematical computation, we would like to reach at least a precision of 7 decimal
+     * digits in our library.
+     */
+    public static final double STATISTICAL_PRECISION = 1e-7;
 }
