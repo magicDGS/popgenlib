@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Utility methods for working with frequencies. If frequencies are not valid, this methods throws
+ * Utility methods for working with frequencies. If frequencies are not valid, these methods throw
  * an {@link IllegalFrequencyException}.
  *
  * @author Daniel Gomez-Sanchez (magicDGS)
@@ -74,21 +74,19 @@ public class FrequencyUtils {
         }
     }
 
-    // validate the range and return the frequency cast as a double
+    // validates the range and return the frequency cast as a double
     private static double validateRange(final Double freq) {
-        try {
-            Verify.validate(freq >= FREQUENCY_ZERO && freq <= FREQUENCY_ONE,
-                    () -> String.format("Frequencies out of range [%s, %s]: %s",
-                            FREQUENCY_ZERO, FREQUENCY_ONE, freq));
-            return freq;
-        } catch (IllegalArgumentException e) {
-            throw new IllegalFrequencyException(e);
-        }
+        Verify.validate(freq >= FREQUENCY_ZERO && freq <= FREQUENCY_ONE,
+                () -> String.format("Frequencies out of range [%s, %s]: %s",
+                        FREQUENCY_ZERO, FREQUENCY_ONE, freq));
+        return freq;
     }
 
     /**
-     * Gets total counts and frequencies from a list of counts. In principle, the original counts
-     * could be recovered by multiplying each of the frequencies by the total number of counts.
+     * Gets total counts and frequencies from a list of counts.
+     *
+     * <p>Note: Original counts could be recovered by multiplying each of the frequencies by the
+     * total number of counts.
      *
      * @param counts list of counts for each category.
      *
@@ -107,7 +105,7 @@ public class FrequencyUtils {
 
             // compute the frequencies
             final List<Double> freqs = new ArrayList<>(counts.size());
-            for (final double c: counts) {
+            for (final double c : counts) {
                 if (c == 0) {
                     freqs.add(FREQUENCY_ZERO);
                 } else {

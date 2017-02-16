@@ -28,7 +28,7 @@ import java.util.Collection;
 import java.util.function.Supplier;
 
 /**
- * Various utils for validation of parameters.
+ * Utils for verification/validation of parameters.
  *
  * @author Daniel Gomez-Sanchez (magicDGS)
  */
@@ -52,12 +52,12 @@ public final class Verify {
     }
 
     /**
-     * Verifies if the object is non-null.
+     * Verifies if the object is non {@code null}.
      *
      * @param object object to verify.
      * @param msg    message supplier in case of exception.
      *
-     * @return the same object if it pass the verification.
+     * @return same object.
      *
      * @throws IllegalArgumentException if the object is {@code null}.
      */
@@ -73,7 +73,7 @@ public final class Verify {
      * @param collection collection to verify.
      * @param msg        message supplier in case of exception.
      *
-     * @return the same object if it pass the verification.
+     * @return same object.
      *
      * @throws IllegalArgumentException if the collection is {@code null}, empty or have
      *                                  {@code null} values.
