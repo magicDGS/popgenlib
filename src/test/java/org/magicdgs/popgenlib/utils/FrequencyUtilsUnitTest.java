@@ -33,7 +33,10 @@ import org.testng.annotations.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.stream.DoubleStream;
+import java.util.stream.IntStream;
 
 /**
  * @author Daniel Gomez-Sanchez (magicDGS)
@@ -89,6 +92,30 @@ public class FrequencyUtilsUnitTest extends PopGenLibTest {
     @Test(dataProvider = "badFrequencies", expectedExceptions = FrequencyUtils.IllegalFrequencyException.class)
     public void testInvalidValidateFrequencies(final List<Double> frequencies) {
         FrequencyUtils.validateFrequencies(frequencies);
+    }
+
+    @DataProvider
+    public static Iterator<Object[]> validMayorFres() {
+        final int max = 30;
+        return IntStream.range(max / 2, max + 1)
+                .mapToObj(i -> new Object[]{(double) i / max}).iterator();
+    }
+
+    @Test(dataProvider = "validMayorFres")
+    public void tesValidateMayorFrequency(final Double freq) {
+        FrequencyUtils.validateMayorFrequency(freq, () -> "shouldn't be shown");
+    }
+
+    @DataProvider
+    public static Iterator<Object[]> invalidMayorFreqs() {
+        final int max = 30;
+        return IntStream.range(0, max / 2)
+                .mapToObj(i -> new Object[]{(double) i / max}).iterator();
+    }
+
+    @Test(dataProvider = "invalidMayorFreqs", expectedExceptions = FrequencyUtils.IllegalFrequencyException.class)
+    public void testInvalidMayorFrequenceis(final Double frequency) {
+        FrequencyUtils.validateMayorFrequency(frequency, () -> "message should be shown");
     }
 
     @DataProvider
