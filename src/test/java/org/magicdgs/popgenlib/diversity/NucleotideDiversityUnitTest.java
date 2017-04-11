@@ -151,8 +151,12 @@ public class NucleotideDiversityUnitTest extends PopGenLibTest {
                 {100, 3, 0.5794439},
                 // same number of segregating sites and samples
                 {20, 20, 5.6373922},
-                {100, 100, 19.3147978}
-                // TODO: test with very high sample size to test the approximation
+                {100, 100, 19.3147978},
+                // very large sample size to test the approximation
+                {10000, 3, 0.3065132},
+                {10000, 100, 10.2171074},
+                {10000, 200, 20.4342147},
+                {10000, 1000, 102.1710736}
         };
     }
 

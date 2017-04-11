@@ -146,7 +146,7 @@ public final class NucleotideDiversity {
         // This could be more efficiently computed using the formula implying the digamma distribution,
         // which is implemented in an approximated way in commons-math3 (good enough for our purposes).
         // In common-math3 they only use the fast algorithm if n is >= 49
-        // thus, the limit for switching to the fast algorithm is 50 here,
+        // thus, here the limit for switching to the fast algorithm is 49 too,
         // because it will use the same number of iterations if not
         if (numberOfSamples < 49) {
             return IntStream.range(1, numberOfSamples).mapToDouble(i -> 1d / i).sum();
@@ -154,7 +154,7 @@ public final class NucleotideDiversity {
         // The formula of the nth Harmonic number using the digamma function is defined as:
         // gamma + psi(n + 1); where gamma is the Euler-Mascheroni constant and psi the digamma function
         // because here we want the number numberOfSamples-1 Harmonic number, we can use directly
-        // gamma + psi(numberOfSamples) if more than 50 (efficient computation)
+        // gamma + psi(numberOfSamples) if 49 or more samples were provided (efficient computation)
         return Gamma.GAMMA + Gamma.digamma(numberOfSamples);
     }
 }
