@@ -5,8 +5,14 @@ jdk:
     - oraclejdk8
 
 env:
+    global:
     # disable gradle daemon
     - GRADLE_OPTS="-Dorg.gradle.daemon=false"
+    matrix:
+    ## javadoc compilance testing
+    - TYPE=javadoc
+    ## library testing
+    - TYPE=test
 
 # gradle cache
 before_cache:
@@ -18,10 +24,17 @@ cache:
         - $HOME/.gradle/wrapper/
 
 install:
-    - ./gradlew build
+    - ./gradlew assemble
 
 script:
-    - ./gradlew jacocoTestReport
+    - if [[ $TYPE == javadoc ]]; then
+          ./gradlew javadoc;
+      elif [[ $TYPE == test ]]; then
+          ./gradlew jacocoTestReport;
+      else
+          echo "Test type not recognized $TYPE";
+          exit 1;
+      fi
 
 after_success:
     - bash <(curl -s https://codecov.io/bash) -X gcov -X coveragepy
