@@ -96,8 +96,8 @@ public final class NucleotideDiversity {
         Verify.nonEmpty(alleleCounts, () -> "allele counts");
         final int numberOfSamples = alleleCounts.stream().reduce(0, Integer::sum);
         final List<Double> freqs = alleleCounts.stream()
-                .mapToDouble(c -> (double) c / (double) numberOfSamples)
-                .boxed().collect(Collectors.toList());
+                .map(c -> (double) c / (double) numberOfSamples)
+                .collect(Collectors.toList());
         return tajimasPi(numberOfSamples, freqs);
     }
 
