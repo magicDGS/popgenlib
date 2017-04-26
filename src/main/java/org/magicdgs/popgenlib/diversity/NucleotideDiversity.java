@@ -29,7 +29,6 @@ import org.magicdgs.popgenlib.utils.Verify;
 
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.math3.special.Gamma;
-import org.apache.commons.math3.util.FastMath;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -78,7 +77,7 @@ public final class NucleotideDiversity {
 
         // computes the sum of p2
         final double pSquareSum =
-                alleleFrequencies.stream().mapToDouble(i -> FastMath.pow(i, 2)).sum();
+                alleleFrequencies.stream().mapToDouble(i -> i * i).sum();
         // tajima's pi computed as in formula 12 in Tajima 1989
         return (numberOfSamples * (1 - pSquareSum)) / (numberOfSamples - 1);
     }
