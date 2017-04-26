@@ -27,7 +27,6 @@ package org.magicdgs.popgenlib.diversity;
 import org.magicdgs.popgenlib.utils.FrequencyUtils;
 import org.magicdgs.popgenlib.utils.Verify;
 
-import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.math3.special.Gamma;
 import org.apache.commons.math3.util.Pair;
 
@@ -135,8 +134,7 @@ public final class NucleotideDiversity {
      * @throws IllegalArgumentException if the number of samples is lower than 2.
      * @see Gamma#digamma(double)
      */
-    @VisibleForTesting
-    static double wattersonsDenominatorApproximation(final int numberOfSamples) {
+    public static double wattersonsDenominatorApproximation(final int numberOfSamples) {
         // Defined as sum(1/j) for j=1 to j=n-1; where n is the number of samples
         // This is actually the (n-1)th Harmonic number (https://en.wikipedia.org/wiki/Harmonic_number)
         // This could be more efficiently computed using the formula implying the digamma distribution,
