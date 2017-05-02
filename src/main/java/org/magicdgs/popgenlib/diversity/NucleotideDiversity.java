@@ -29,6 +29,7 @@ import org.magicdgs.popgenlib.utils.Verify;
 
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.math3.special.Gamma;
+import org.apache.commons.math3.util.Pair;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -92,12 +93,8 @@ public final class NucleotideDiversity {
      * @see #tajimasPi(int, List)
      */
     public static double tajimasPi(final List<Integer> alleleCounts) {
-        Verify.nonEmpty(alleleCounts, () -> "allele counts");
-        final int numberOfSamples = alleleCounts.stream().reduce(0, Integer::sum);
-        final List<Double> freqs = alleleCounts.stream()
-                .map(c -> (double) c / (double) numberOfSamples)
-                .collect(Collectors.toList());
-        return tajimasPi(numberOfSamples, freqs);
+        final Pair<Integer, List<Double>> freqs = FrequencyUtils.countsToFrequencies(alleleCounts);
+        return tajimasPi(freqs.getFirst(), freqs.getSecond());
     }
 
     /**
