@@ -105,7 +105,7 @@ public class FrequencyUtils {
                     }).sum();
             Verify.validate(total > 0, () -> "all counts are zero");
 
-            // compute the frequencies using BigDecilam operations
+            // compute the frequencies using BigDecimal operations
             final BigDecimal totalBig = new BigDecimal(total);
             final List<Double> freqs = new ArrayList<>(counts.size());
             for (final double c : counts) {
