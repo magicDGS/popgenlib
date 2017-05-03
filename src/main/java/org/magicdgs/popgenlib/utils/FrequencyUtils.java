@@ -26,6 +26,8 @@ package org.magicdgs.popgenlib.utils;
 
 import org.apache.commons.math3.util.Pair;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -103,13 +105,14 @@ public class FrequencyUtils {
                     }).sum();
             Verify.validate(total > 0, () -> "all counts are zero");
 
-            // compute the frequencies
+            // compute the frequencies using BigDecimal operations
+            final BigDecimal totalBig = new BigDecimal(total);
             final List<Double> freqs = new ArrayList<>(counts.size());
             for (final double c : counts) {
                 if (c == 0) {
                     freqs.add(FREQUENCY_ZERO);
                 } else {
-                    freqs.add(c / (double) total);
+                    freqs.add(new BigDecimal(c).divide(totalBig, MathContext.DECIMAL64).doubleValue());
                 }
             }
 

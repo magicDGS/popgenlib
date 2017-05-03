@@ -148,17 +148,26 @@ public class FrequencyUtilsUnitTest extends PopGenLibTest {
                 // with zeroes
                 {Arrays.asList(1, 0), 1, Arrays.asList(1d, 0d)},
                 {Arrays.asList(10, 0), 10, Arrays.asList(1d, 0d)},
-                {Arrays.asList(1, 1, 0), 2, Arrays.asList(0.5, 0.5, 0d)}
+                {Arrays.asList(1, 1, 0), 2, Arrays.asList(0.5, 0.5, 0d)},
+                {Arrays.asList(0, 20, 0, 90), 110, Arrays.asList(0.0, 20 / 110d, 0.0, 90 / 110d)}
         };
     }
 
     @Test(dataProvider = "countsData")
-    public void testCountsToFrequencies(final List<Integer> counts, final Integer expectedCounts,
+    public void testCountsToFrequencies(final List<Integer> counts, final int expectedCounts,
             final List<Double> expectedFrequencies) {
         // check if the result is as expected
         final Pair<Integer, List<Double>> result = FrequencyUtils.countsToFrequencies(counts);
-        Assert.assertEquals(result.getFirst(), expectedCounts);
-        Assert.assertEquals(result.getSecond(), expectedFrequencies);
+        Assert.assertEquals(result.getFirst().intValue(), expectedCounts);
+
+        final List<Double> freqs = result.getSecond();
+
+        Assert.assertEquals(freqs.size(), expectedFrequencies.size(), "not equal length");
+        for (int i = 0; i < expectedFrequencies.size(); i++) {
+            // test with the maximum number of digits for double with precision
+            Assert.assertEquals(freqs.get(i), expectedFrequencies.get(i), 1e-15,
+                    "not equal value at " + i);
+        }
 
         // and the validation of the frequencies should not blow up
         FrequencyUtils.validateFrequencies(result.getSecond());
