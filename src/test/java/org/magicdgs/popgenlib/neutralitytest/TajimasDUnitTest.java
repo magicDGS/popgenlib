@@ -99,7 +99,8 @@ public class TajimasDUnitTest extends PopGenLibTest {
                 {1, 100, 1.11},
                 // invalid number of segregating sites
                 {2, -1, 1.11},
-                {2, -2, 1.11}
+                {2, -2, 1.11},
+                {2, 0, 1.11}
         };
     }
 

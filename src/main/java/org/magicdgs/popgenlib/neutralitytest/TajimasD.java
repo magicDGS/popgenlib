@@ -65,8 +65,8 @@ public final class TajimasD {
      */
     public static double tajimasD(final int numberOfSamples, final int numberOfSegregatingSites,
             final double pairwiseDifferences) {
-        Verify.validate(numberOfSegregatingSites >= 0,
-                () -> "Number of segregating sites should be a positive integer or 0: "
+        Verify.validate(numberOfSegregatingSites > 0,
+                () -> "Number of segregating sites should be a positive integer: "
                         + numberOfSegregatingSites);
         Verify.validate(numberOfSamples > 1,
                 () -> "numberOfSamples should be at least 2: " + numberOfSamples);
@@ -78,7 +78,7 @@ public final class TajimasD {
                 FastMath.sqrt(varianceConstants.getFirst() * numberOfSegregatingSites
                         + varianceConstants.getSecond() * numberOfSegregatingSites * (
                         numberOfSegregatingSites - 1));
-        // otherwise, follow formula 38
+        // use formula 38's implementation, computing theta on demand
         return tajimasD(pairwiseDifferences,
                 () -> NucleotideDiversity
                         .wattersonsTheta(numberOfSamples, numberOfSegregatingSites),
@@ -127,7 +127,7 @@ public final class TajimasD {
         // Tajima's pi constants (formulas 8 and 9)
         final double b1 = (numberOfSamples + 1d)
                 / (3d * (numberOfSamples - 1d));
-        final double b2 = (2d * (FastMath.pow(numberOfSamples, 2) + numberOfSamples + 3d))
+        final double b2 = (2d * ((numberOfSamples * numberOfSamples) + numberOfSamples + 3d))
                 / (9d * numberOfSamples * (numberOfSamples - 1d));
 
         // compute only once a1^2, because it is used twice
