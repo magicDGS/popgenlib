@@ -52,6 +52,7 @@ public final class FStatistic {
      */
     // TODO: this formula is similar to the PoPoolation2 implementation
     // TODO: but we require the reference and formula in the javadoc
+    // TODO: and it should use the general method
     public static double pairwiseFst(final int numberOfSamples1,
             final List<Double> alleleFrequencies1,
             final int numberOfSamples2, final List<Double> alleleFrequencies2) {
@@ -90,6 +91,58 @@ public final class FStatistic {
         // now the diversity between-within population percentage defines Fst
         return (combinedPi - average) / combinedPi;
 
+    }
+
+
+    // TODO: documentation
+    public static double fst(final List<Integer> numberOfSamplesPerPopulation,
+            final List<List<Double>> frequenciesPerPopulation) {
+        // validate lists
+        Verify.nonEmpty(numberOfSamplesPerPopulation, () -> "numberOfSamplesPerPopulation");
+        Verify.nonEmpty(frequenciesPerPopulation, () -> "frequenciesPerPopulation");
+
+        final int nPopulations = numberOfSamplesPerPopulation.size();
+        // validate that each sample have a value
+        Verify.validate(nPopulations == frequenciesPerPopulation.size(),
+                () -> "the number of values in both lists should be equal to the number of populations");
+
+        final int nAlleles = frequenciesPerPopulation.get(0).size();
+        // validates that all the populations have the
+        frequenciesPerPopulation.forEach(freqs -> Verify.validate(nAlleles == freqs.size(),
+                () -> "different number of alleles per population were found"));
+
+        // combine the frequencies for all the populations
+        final List<Double> combindedFrequencies = new ArrayList<>(nAlleles);
+        for (int i = 0; i < nAlleles; i++) {
+            // it should be final for use inside the stream
+            final int index = i;
+            final double freqSum = frequenciesPerPopulation.stream()
+                    .mapToDouble(freqs -> freqs.get(index)).sum();
+            combindedFrequencies.add(freqSum / nPopulations);
+        }
+
+        // get the nucleotide diversity for the "combined" population
+        // combined frequencies represents the total population, and thus its diversity is the
+        // pair-wise differences between population
+        final int totalSumples = numberOfSamplesPerPopulation.stream().reduce(0, Integer::sum);
+        final double betweenPi = NucleotideDiversity.tajimasPi(totalSumples, combindedFrequencies);
+
+        // if it is 0, do not wait time computing the nucleotide diversity by population
+        if (betweenPi == 0) {
+            return 0;
+        }
+
+        // otherwise, we need the average diversity of the two populations
+        double averageWithinPi = 0;
+        for (int i = 0; i < nAlleles; i++) {
+            averageWithinPi += NucleotideDiversity.tajimasPi(
+                    numberOfSamplesPerPopulation.get(i),
+                    frequenciesPerPopulation.get(i));
+        }
+        averageWithinPi /= nPopulations;
+
+        // formula 3 in Hudson et al. 1992.
+        return 1 - (averageWithinPi / betweenPi);
     }
 
 }
