@@ -27,6 +27,11 @@ package org.magicdgs.popgenlib.divergence;
 import org.magicdgs.popgenlib.diversity.NucleotideDiversity;
 import org.magicdgs.popgenlib.utils.Verify;
 
+import org.apache.commons.math3.util.FastMath;
+
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,8 +79,10 @@ public final class FStatistic {
         // get the nucleotide diversity for the "combined" population
         // combined frequencies represents the total population, and thus its diversity is the
         // pair-wise differences between population
+        // TODO: note: the number of samples is the minimum number of samples - Why?
+        // TODO: this is in PoPoolation's script
         final double combinedPi = NucleotideDiversity
-                .tajimasPi(numberOfSamples1 + numberOfSamples2, combinedFrequency);
+                .tajimasPi(FastMath.min(numberOfSamples1, numberOfSamples2), combinedFrequency);
 
         // if it is 0, do not wait time computing the nucleotide diversity by population
         if (combinedPi == 0) {
@@ -124,7 +131,9 @@ public final class FStatistic {
         // get the nucleotide diversity for the "combined" population
         // combined frequencies represents the total population, and thus its diversity is the
         // pair-wise differences between population
-        final int totalSumples = numberOfSamplesPerPopulation.stream().reduce(0, Integer::sum);
+        // TODO: note: the number of samples is the minimum number of samples - Why?
+        // TODO: this is in PoPoolation's script
+        final int totalSumples = numberOfSamplesPerPopulation.stream().min(Integer::compare).orElseGet(() -> 0);
         final double betweenPi = NucleotideDiversity.tajimasPi(totalSumples, combindedFrequencies);
 
         // if it is 0, do not wait time computing the nucleotide diversity by population
