@@ -36,9 +36,7 @@ import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
-import org.openjdk.jmh.runner.options.VerboseMode;
 import org.testng.Assert;
-import org.testng.annotations.AfterSuite;
 import org.testng.annotations.Test;
 
 import java.util.Collection;
@@ -60,7 +58,7 @@ public class WattersonsThetaCalculatorPerformanceTest extends PopGenLibTest {
                 .warmupTime(TimeValue.seconds(1))
                 .warmupIterations(2)
                 .measurementTime(TimeValue.seconds(1))
-                .measurementIterations(10)
+                .measurementIterations(20)
                 .threads(1)
                 .forks(1)
                 .shouldFailOnError(true)
