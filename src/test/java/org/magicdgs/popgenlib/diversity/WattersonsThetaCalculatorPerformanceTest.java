@@ -76,13 +76,13 @@ public class WattersonsThetaCalculatorPerformanceTest extends PopGenLibTest {
                 result -> result.getPrimaryResult().getScore()));
     }
 
-    @Test
+    @Test(singleThreaded = true)
     public void testSpeedComparedToNonCached() throws Exception {
         final Map<String, Double> avgTime = runBenchmark(Mode.AverageTime);
         final double cached = avgTime.get(this.getClass().getName() + ".MicroBenchmark.cached");
         final double nonCached = avgTime.get(this.getClass().getName() + ".MicroBenchmark.nonCached");
         // TODO: compare microseconds with some expected improvement
-        Assert.assertTrue(cached < nonCached, "no improvement in performance");
+        Assert.assertTrue(cached < nonCached, "improvement in performance");
     }
 
     @State(Scope.Thread)
