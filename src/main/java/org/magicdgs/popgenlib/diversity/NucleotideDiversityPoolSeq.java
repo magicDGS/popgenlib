@@ -61,7 +61,7 @@ public final class NucleotideDiversityPoolSeq {
      * Computes Tajima's &pi; for a single site using allele counts and correcting using the method
      * described in
      * <a href="http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0015925">
-     * Kofler <i>et al.</i> (2010)</a>.
+     * Kofler <i>et al.</i> (2010)</a> (page 7, first formula).
      *
      * @param minCount     minimum count used.
      * @param poolSize     number of samples pooled together.
@@ -81,7 +81,7 @@ public final class NucleotideDiversityPoolSeq {
     /**
      * Computes Watterson's &theta; using the corrected formula from
      * <a href="http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0015925">
-     * Kofler <i>et al.</i> (2010)</a>.
+     * Kofler <i>et al.</i> (2010)</a> (page 7, first formula).
      *
      * <p>Note: this implementation assumes the same minimum count, pool-size and coverage for all
      * the positions. For different coverages, use {@link #wattersonsTheta(int, int, List)}
@@ -117,7 +117,7 @@ public final class NucleotideDiversityPoolSeq {
     /**
      * Computes Watterson's &theta; using the corrected formula from
      * <a href="http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0015925">
-     * Kofler <i>et al.</i> (2010)</a>.
+     * Kofler <i>et al.</i> (2010)</a> (page 7, second formula).
      *
      * <p>Note: the number of segregating sites is the size of the list with coverages.
      *
@@ -147,10 +147,13 @@ public final class NucleotideDiversityPoolSeq {
     /**
      * Gets the correction factor for Tajima's &pi; defined in
      * <a href="http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0015925">
-     * Kofler <i>et al.</i> (2010)</a>.
+     * Kofler <i>et al.</i> (2010)</a> (page 7, first formula denominator).
      *
      * <p>The correction factor is based in the Pool-Size and coverage on the region, and setting a
      * minimum number of read counts to estimate frequencies.
+     *
+     * <p>Note: this should be applied to a Tajima's &pi; estimate already correcting by sample
+     * size. This correction factor is <code>numberOfSamples - 1 / numberOfSamples</code>.
      *
      * @param minCount minimum count used to estimate frequencies.
      * @param poolSize number of individuals pooled together and used to estimate frequencies.

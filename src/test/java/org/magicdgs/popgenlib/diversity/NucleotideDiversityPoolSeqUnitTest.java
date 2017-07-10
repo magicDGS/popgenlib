@@ -172,7 +172,7 @@ public class NucleotideDiversityPoolSeqUnitTest extends PopGenLibTest {
                 {100, 500},
                 // higher pool-size than coverage
                 {500, 100},
-                // equal pool-size and coverag
+                // equal pool-size and coverage
                 {100, 100}
         };
     }
@@ -211,9 +211,13 @@ public class NucleotideDiversityPoolSeqUnitTest extends PopGenLibTest {
         Assert.assertThrows(IllegalArgumentException.class,
                 () -> NucleotideDiversityPoolSeq.wattersonsTheta(-1, minCount, poolSize, 100));
 
-        // wrong coverage
+        // no coverage
         Assert.assertThrows(IllegalArgumentException.class,
                 () -> NucleotideDiversityPoolSeq.wattersonsTheta(1, minCount, poolSize, 0));
+
+        // negative coverage
+        Assert.assertThrows(IllegalArgumentException.class,
+                () -> NucleotideDiversityPoolSeq.wattersonsTheta(1, minCount, poolSize, -1));
 
     }
 
