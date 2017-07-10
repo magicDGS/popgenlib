@@ -38,6 +38,7 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
 import org.openjdk.jmh.runner.options.VerboseMode;
 import org.testng.Assert;
+import org.testng.annotations.AfterSuite;
 import org.testng.annotations.Test;
 
 import java.util.Collection;
@@ -94,7 +95,7 @@ public class WattersonsThetaCalculatorPerformanceTest extends PopGenLibTest {
 
         @Benchmark
         public void nonCached(final MicroBenchmark state, final Blackhole bh) {
-            for (int i = 0; i < 100000; i++) {
+            for (int i = 0; i < 1000000; i++) {
                 bh.consume(NucleotideDiversity.wattersonsTheta(1000, 2));
             }
         }
@@ -102,7 +103,7 @@ public class WattersonsThetaCalculatorPerformanceTest extends PopGenLibTest {
         @Benchmark
         public void cached(final MicroBenchmark state, final Blackhole bh) {
             final WattersonsThetaCalculator calculator = new WattersonsThetaCalculator();
-            for (int i = 0; i < 100000; i++) {
+            for (int i = 0; i < 1000000; i++) {
                 bh.consume(calculator.wattersonsTheta(1000, 2));
             }
         }
