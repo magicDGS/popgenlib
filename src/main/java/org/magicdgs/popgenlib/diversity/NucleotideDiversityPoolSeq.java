@@ -190,7 +190,7 @@ public final class NucleotideDiversityPoolSeq {
                 // TODO: this could be substituted by:
                 // TODO: probability = new BinomialDistribution(coverage, (double) k / poolSize).probability(readCount)
                 // TODO: probability / k
-                // TODO: needs tests for efficiency: our implementation vs. object instantiation
+                // TODO: needs tests for efficiency (see https://github.com/magicDGS/popgenlib/issues/23)
                 .mapToDouble(k -> countProbability(readCount, coverage, poolSize, k) / k)
                 .sum();
     }
