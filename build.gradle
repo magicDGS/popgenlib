@@ -59,12 +59,6 @@ tasks.withType(Test) {
         logger.lifecycle("Running Test: " +  descriptor)
     }
 
-    // listen to standarrd out and standard error of the test JVM(s)
-    def testOutput = ""
-    onOutput { descriptor, event ->
-        logger.lifecycle("Test: " + descriptor + " standard out/err -> " + event.message)
-    }
-
     // logging after the tests
     testLogging {
         testLogging {
@@ -76,5 +70,23 @@ tasks.withType(Test) {
                 println "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
             }
         }
+    }
+}
+
+test {
+    useTestNG() {
+        excludeGroups 'performance'
+    }
+
+    // listen to standard out and standard error of the test JVM(s)
+    def testOutput = ""
+    onOutput { descriptor, event ->
+        logger.lifecycle("Test: " + descriptor + " standard out/err -> " + event.message)
+    }
+}
+
+task performanceTest(type: Test) {
+    useTestNG() {
+        includeGroups 'performance'
     }
 }

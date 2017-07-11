@@ -24,70 +24,39 @@
 
 package org.magicdgs.popgenlib.diversity;
 
-import org.magicdgs.popgenlib.PopGenLibTest;
+import org.magicdgs.popgenlib.PopGenLibPerformanceTest;
 
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
-import org.openjdk.jmh.results.RunResult;
-import org.openjdk.jmh.runner.Runner;
-import org.openjdk.jmh.runner.options.Options;
-import org.openjdk.jmh.runner.options.OptionsBuilder;
-import org.openjdk.jmh.runner.options.TimeValue;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.Collection;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * @author Daniel Gomez-Sanchez (magicDGS)
  */
-public class WattersonsThetaCalculatorPerformanceTest extends PopGenLibTest {
-
-    // TODO: move to PopGenLibTest to run all benchmarks??
-    public final Map<String, Double> runBenchmark(final Mode mode) throws Exception {
-        final Options opt = new OptionsBuilder()
-                .include(this.getClass().getName() + ".*")
-                .mode(mode)
-                .timeUnit(TimeUnit.MICROSECONDS)
-                .warmupTime(TimeValue.seconds(1))
-                .warmupIterations(2)
-                .measurementTime(TimeValue.seconds(1))
-                .measurementIterations(20)
-                .threads(1)
-                .forks(1)
-                .shouldFailOnError(true)
-                .shouldDoGC(true)
-                // do not run with JVM to override the gradle/IDE defaults
-                .jvmArgs()
-                .build();
-
-        // run the benchmark
-        final Collection<RunResult> results = new Runner(opt).run();
-        // creates a map with the benchmark name and the score
-        return results.stream().collect(Collectors.toMap(
-                result -> result.getParams().getBenchmark(),
-                result -> result.getPrimaryResult().getScore()));
-    }
+public class WattersonsThetaCalculatorPerformanceTest extends PopGenLibPerformanceTest {
 
     @Test(singleThreaded = true)
-    public void testSpeedComparedToNonCached() throws Exception {
-        final Map<String, Double> avgTime = runBenchmark(Mode.AverageTime);
+    public void testFasterCachedVersion() throws Exception {
+        final Map<String, Double> avgTime = runBenchmark(Mode.AverageTime, 2, 20);
         final double cached = avgTime.get(this.getClass().getName() + ".MicroBenchmark.cached");
-        final double nonCached = avgTime.get(this.getClass().getName() + ".MicroBenchmark.nonCached");
+        final double nonCached =
+                avgTime.get(this.getClass().getName() + ".MicroBenchmark.nonCached");
         // we expect improvement in the performance, even if it is small
         if (cached > nonCached) {
-            Assert.fail(String.format("No improvement in performance: %s ms/op (cached) vs. %s ms/op (non cached)",
-                cached, nonCached
+            Assert.fail(String.format(
+                    "No improvement in performance: %s ms/op (cached) vs. %s ms/op (non cached)",
+                    cached, nonCached
             ));
         }
     }
 
+    // TODO: maybe extract this benchmarks to a different module and run performance tests there
     @State(Scope.Thread)
     public static class MicroBenchmark {
 
