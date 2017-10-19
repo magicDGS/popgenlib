@@ -31,6 +31,7 @@ import java.math.MathContext;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -46,6 +47,10 @@ public class FrequencyUtils {
 
     /** Minimum frequency. */
     public static final Double FREQUENCY_ZERO = 0d;
+
+    // minor frequency trheshold for checking non-minor alleles
+    // minor allele should be always lower or equals than 0.5
+    private static final double MINOR_FREQUENCY_THRESHOLD = 0.5d;
 
     // cannot be instantiated
     private FrequencyUtils() {}
@@ -66,7 +71,7 @@ public class FrequencyUtils {
     public static void validateFrequencies(final List<Double> frequencies) {
         try {
             final double sum = Verify.nonEmpty(frequencies, () -> "frequencies")
-                    .stream().mapToDouble(FrequencyUtils::validateRange)
+                    .stream().mapToDouble(FrequencyUtils::validateFrequencyRange)
                     .sum();
             Verify.validate(FREQUENCY_ONE.equals(sum),
                     () -> String.format("Frequencies should sum 1 but found %s: %s",
@@ -76,12 +81,49 @@ public class FrequencyUtils {
         }
     }
 
-    // validates the range and return the frequency cast as a double
-    private static double validateRange(final Double freq) {
-        Verify.validate(freq >= FREQUENCY_ZERO && freq <= FREQUENCY_ONE,
-                () -> String.format("Frequencies out of range [%s, %s]: %s",
-                        FREQUENCY_ZERO, FREQUENCY_ONE, freq));
-        return freq;
+    /**
+     * Validates the range of the frequency ([{@link #FREQUENCY_ZERO}, {@link #FREQUENCY_ONE}]).
+     *
+     * <p>Note: use {@link #validateFrequencies(List)} for checking if all the frequencies are
+     * within range and sum exactly {@link #FREQUENCY_ONE}.
+     *
+     * @param freq the frequency to validate.
+     *
+     * @return the same frequency.
+     *
+     * @throws IllegalFrequencyException if the frequency is not within the range.
+     */
+    public static double validateFrequencyRange(final Double freq) {
+        try {
+            Verify.validate(freq >= FREQUENCY_ZERO && freq <= FREQUENCY_ONE,
+                    () -> String.format("Frequencies out of range [%s, %s]: %s",
+                            FREQUENCY_ZERO, FREQUENCY_ONE, freq));
+            return freq;
+        } catch (IllegalArgumentException e) {
+            throw new IllegalFrequencyException(e);
+        }
+    }
+
+    /**
+     * Validates that the range of the frequency ({@link #validateFrequencyRange(Double)} and
+     * that the frequencies corresponds to a minor frequency for a binary trait
+     * ({@code freq >= 1/2}).
+     *
+     * @param freq the frequency to validate.
+     * @param msg message to add to the error message for non-minor frequencies.
+     *
+     * @return the same frequency.
+     *
+     * @throws IllegalFrequencyException if the frequency is not within the range or minor.
+     */
+    public static double validateMayorFrequency(final Double freq, final Supplier<String> msg) {
+        validateFrequencyRange(freq);
+        try {
+            Verify.validate(freq >= MINOR_FREQUENCY_THRESHOLD, () -> "Non-minor: " + msg.get());
+            return freq;
+        } catch (IllegalArgumentException e) {
+            throw new IllegalFrequencyException(e);
+        }
     }
 
     /**
@@ -112,7 +154,8 @@ public class FrequencyUtils {
                 if (c == 0) {
                     freqs.add(FREQUENCY_ZERO);
                 } else {
-                    freqs.add(new BigDecimal(c).divide(totalBig, MathContext.DECIMAL64).doubleValue());
+                    freqs.add(new BigDecimal(c).divide(totalBig, MathContext.DECIMAL64)
+                            .doubleValue());
                 }
             }
 
