@@ -103,12 +103,12 @@ public final class NucleotideDiversity {
      *
      * @param numberOfSamples          number of samples used to get the number of segregating
      *                                 sites.
-     * @param numberOfSegregatingSites number of segregating sites in the sample.
+     * @param numberOfSegregatingSites number of segregating sites in the sample (larger than 1).
      */
     public static double wattersonsTheta(final int numberOfSamples,
             final int numberOfSegregatingSites) {
-        Verify.validate(numberOfSegregatingSites >= 0,
-                () -> "Number of segregating sites should be a positive integer or 0: "
+        Verify.validate(numberOfSegregatingSites > 0,
+                () -> "Number of segregating sites should be a positive integer: "
                         + numberOfSegregatingSites);
         Verify.validate(numberOfSamples > 1,
                 () -> "numberOfSamples should be at least 2: " + numberOfSamples);
