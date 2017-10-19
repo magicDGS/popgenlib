@@ -133,13 +133,8 @@ public class NucleotideDiversityUnitTest extends PopGenLibTest {
         // 2. number of segregating sites
         // 3. Expected Watterson's Theta
         return new Object[][] {
-                // only 2 samples and 0 segregating sites (edge case)
-                {2, 0, 0d},
                 // only 2 samples and 1 segregating site (edge case)
                 {2, 1, 1d},
-                // for non-segregating sites is always 0 independently of the samples
-                {100, 0, 0d},
-                {10, 0, 0d},
                 // for only one segregating and different number of samples
                 {20, 1, 0.2818696},
                 {100, 1, 0.1931480},
@@ -174,6 +169,7 @@ public class NucleotideDiversityUnitTest extends PopGenLibTest {
                 // invalid number of samples
                 {-1, 10}, {0, 10}, {1, 10},
                 // invalid segregating sites
+                {10, 0},
                 {10, -1}
         };
     }
