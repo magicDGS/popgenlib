@@ -1,13 +1,13 @@
 // Dependencies for the buildscript (not the program)
 buildscript {
-    repositories {
-        mavenCentral()
-    }
+	repositories {
+		mavenCentral()
+	}
 }
 
 plugins {
-    id "java"
-    // id "jacoco"
+	id "java"
+	// id "jacoco"
 }
 
 apply from: 'gradle/jacoco.coverage.gradle'
@@ -20,58 +20,58 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
-    mavenCentral()
+	mavenCentral()
 }
 
 dependencies {
-	compile "org.slf4j:slf4j-api:1.7.23"
-    compile "com.google.guava:guava:21.0"
-    compile "org.apache.commons:commons-math3:3.6.1"
+	implementation "org.slf4j:slf4j-api:1.7.23"
+	implementation "com.google.guava:guava:21.0"
+	implementation "org.apache.commons:commons-math3:3.6.1"
 
-	testCompile "org.testng:testng:6.10"
+	testImplementation "org.testng:testng:6.10"
 }
 
 // for managing the wrapper task
-task wrapper(type: Wrapper) {
-    gradleVersion = '3.3'
+wrapper {
+	gradleVersion = '7.6'
 }
 
 // test task
 tasks.withType(Test) {
 
-    // tests could be always re-run
-    outputs.upToDateWhen { false }
+	// tests could be always re-run
+	outputs.upToDateWhen { false }
 
-    useTestNG()
+	useTestNG()
 
-    // show the stdout/stderr of the test JVM(s) on the console
-    testLogging.showStandardStreams = true
+	// show the stdout/stderr of the test JVM(s) on the console
+	testLogging.showStandardStreams = true
 
-    // set heap size for the test JVM(s)
-    minHeapSize = "1G"
-    maxHeapSize = "2G"
+	// set heap size for the test JVM(s)
+	minHeapSize = "1G"
+	maxHeapSize = "2G"
 
-    // log the test that is running
-    beforeTest { descriptor ->
-        logger.lifecycle("Running Test: " +  descriptor)
-    }
+	// log the test that is running
+	beforeTest { descriptor ->
+		logger.lifecycle("Running Test: " +	 descriptor)
+	}
 
-    // listen to standarrd out and standard error of the test JVM(s)
-    def testOutput = ""
-    onOutput { descriptor, event ->
-        logger.lifecycle("Test: " + descriptor + " standard out/err -> " + event.message)
-    }
+	// listen to standarrd out and standard error of the test JVM(s)
+	def testOutput = ""
+	onOutput { descriptor, event ->
+		logger.lifecycle("Test: " + descriptor + " standard out/err -> " + event.message)
+	}
 
-    // logging after the tests
-    testLogging {
-        testLogging {
-            events "skipped", "failed"
-            exceptionFormat = "full"
-        }
-        afterSuite { desc, result ->
-            if (!desc.parent) { // will match the outermost suite
-                println "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
-            }
-        }
-    }
+	// logging after the tests
+	testLogging {
+		testLogging {
+			events "skipped", "failed"
+			exceptionFormat = "full"
+		}
+		afterSuite { desc, result ->
+			if (!desc.parent) { // will match the outermost suite
+				println "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
+			}
+		}
+	}
 }
